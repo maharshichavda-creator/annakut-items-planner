@@ -1,0 +1,75 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Haribhakts</h2>
+    <button mat-flat-button color="primary" (click)="openAddForm()">
+      <mat-icon>add</mat-icon>
+      Add haribhakt
+    </button>
+  </div>
+
+  @if (showForm()) {
+    <mat-card class="form-card">
+      <mat-card-content>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="form.name" name="name" required />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Mobile number</mat-label>
+            <input matInput [(ngModel)]="form.mobileNumber" name="mobileNumber" />
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Address</mat-label>
+          <input matInput [(ngModel)]="form.address" name="address" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notes</mat-label>
+          <input matInput [(ngModel)]="form.notes" name="notes" />
+        </mat-form-field>
+        <div class="form-actions">
+          <button mat-flat-button color="primary" (click)="save()">Save</button>
+          <button mat-button (click)="cancelForm()">Cancel</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <table mat-table [dataSource]="haribhakts()" class="mat-elevation-z1 full-width">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let h">{{ h.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="mobileNumber">
+      <th mat-header-cell *matHeaderCellDef>Mobile</th>
+      <td mat-cell *matCellDef="let h">{{ h.mobileNumber }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+      <th mat-header-cell *matHeaderCellDef>Address</th>
+      <td mat-cell *matCellDef="let h">{{ h.address }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="notes">
+      <th mat-header-cell *matHeaderCellDef>Notes</th>
+      <td mat-cell *matCellDef="let h">{{ h.notes }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let h">
+        <button mat-icon-button (click)="openEditForm(h)" title="Edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="remove(h)" title="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

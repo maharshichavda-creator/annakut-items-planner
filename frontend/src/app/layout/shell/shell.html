@@ -1,0 +1,59 @@
+<mat-sidenav-container class="shell-container">
+  <mat-sidenav mode="side" opened class="shell-sidenav">
+    <div class="brand">
+      <img src="assets/annakut-logo.png" alt="Annakut Mahotsav" class="brand-logo" />
+      <div class="brand-text">
+        <span>અન્નકૂટ મહોત્સવ વાનગી ફાળવણી</span>
+      </div>
+    </div>
+    <mat-nav-list>
+      @if (auth.isAdmin()) {
+        <a mat-list-item routerLink="/users" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
+          <span matListItemTitle>Users</span>
+        </a>
+        <a mat-list-item routerLink="/festival-years" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>event</mat-icon>
+          <span matListItemTitle>Festival Years</span>
+        </a>
+      }
+      <a mat-list-item routerLink="/items" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>restaurant_menu</mat-icon>
+        <span matListItemTitle>Items</span>
+      </a>
+      <a mat-list-item routerLink="/haribhakts" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>groups</mat-icon>
+        <span matListItemTitle>Haribhakts</span>
+      </a>
+      <a mat-list-item routerLink="/allocations" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>assignment_turned_in</mat-icon>
+        <span matListItemTitle>Allocations</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="shell-toolbar">
+      <img src="assets/annakut-logo.png" alt="" class="toolbar-logo" />
+      <span>અન્નકૂટ મહોત્સવ વાનગી ફાળવણી</span>
+      @if (activeYear()) {
+        <span class="year-badge">{{ activeYear()!.year }}</span>
+      }
+      <span class="spacer"></span>
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+        <mat-icon>account_circle</mat-icon>
+        {{ auth.username() }}
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <div class="shell-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

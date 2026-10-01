@@ -1,0 +1,177 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.stat-card {
+  flex: 1 1 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  color: #fff;
+  text-align: center;
+}
+
+.stat-icon {
+  font-size: 2.2rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  opacity: 0.9;
+}
+
+.stat-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.stat-total {
+  background: linear-gradient(135deg, #895200, #c7812a);
+}
+
+.stat-pending {
+  background: linear-gradient(135deg, #a98600, #e0b400);
+}
+
+.stat-allocated {
+  background: linear-gradient(135deg, #2e7d32, #4caf50);
+}
+
+.stat-collected {
+  background: linear-gradient(135deg, #795548, #a1887f);
+}
+
+.stat-haribhakt {
+  background: linear-gradient(135deg, #5e2129, #8c1717);
+}
+
+.top-controls {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.new-batch-card {
+  max-width: 900px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.form-row mat-form-field {
+  flex: 1 1 220px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.item-pick-list {
+  max-height: 260px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.muted {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 0.85rem;
+}
+
+.selected-count {
+  margin: 8px 0;
+  font-weight: 500;
+}
+
+table {
+  width: 100%;
+}
+
+.batch-detail {
+  margin-top: -8px;
+}
+
+.nested-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+}
+
+.add-items-panel {
+  margin-top: 12px;
+}
+
+.readonly-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff3e0;
+  color: #8a5300;
+  border: 1px solid #ffcc80;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+.disabled-card {
+  opacity: 0.75;
+}
+
+// Custom batch status colors (Material's built-in primary/accent/warn palette
+// doesn't cover these, so the chip background/text is set directly).
+::ng-deep .status-pending {
+  --mdc-chip-elevated-container-color: #ffe9a8;
+  --mdc-chip-label-text-color: #6b5900;
+  background-color: #ffe9a8 !important;
+  color: #6b5900 !important;
+}
+
+::ng-deep .status-allocated {
+  --mdc-chip-elevated-container-color: #4caf50;
+  --mdc-chip-label-text-color: #ffffff;
+  background-color: #4caf50 !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .status-collected {
+  --mdc-chip-elevated-container-color: #a1887f;
+  --mdc-chip-label-text-color: #ffffff;
+  background-color: #a1887f !important;
+  color: #ffffff !important;
+}

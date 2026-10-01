@@ -1,0 +1,55 @@
+.login-page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #fff8f4 0%, #ffeee0 100%);
+}
+
+.login-card {
+  width: 440px;
+  padding: 8px;
+  text-align: center;
+}
+
+.login-logo-wrap {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.login-logo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .login-card .mat-mdc-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0 28px;
+}
+
+::ng-deep .login-card .mat-mdc-card-header-text {
+  width: 100%;
+  text-align: center;
+}
+
+.login-card mat-card-title {
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.error {
+  color: var(--mat-sys-error, #ba1a1a);
+  font-size: 0.9rem;
+}

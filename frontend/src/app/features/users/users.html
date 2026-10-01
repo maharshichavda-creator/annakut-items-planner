@@ -1,0 +1,82 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Users</h2>
+    <button mat-flat-button color="primary" (click)="openAddForm()">
+      <mat-icon>person_add</mat-icon>
+      Add user
+    </button>
+  </div>
+
+  @if (showForm()) {
+    <mat-card class="form-card">
+      <mat-card-content>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput [(ngModel)]="form.username" name="username" required />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [(ngModel)]="form.password" name="password" required />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Full name</mat-label>
+            <input matInput [(ngModel)]="form.fullName" name="fullName" required />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Role</mat-label>
+            <mat-select [(ngModel)]="form.role" name="role">
+              <mat-option value="ADMIN">Admin</mat-option>
+              <mat-option value="VOLUNTEER">Volunteer</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-actions">
+          <button mat-flat-button color="primary" (click)="save()">Save</button>
+          <button mat-button (click)="cancelForm()">Cancel</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <table mat-table [dataSource]="users()" class="mat-elevation-z1 full-width">
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef>Username</th>
+      <td mat-cell *matCellDef="let u">{{ u.username }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="fullName">
+      <th mat-header-cell *matHeaderCellDef>Full name</th>
+      <td mat-cell *matCellDef="let u">{{ u.fullName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef>Role</th>
+      <td mat-cell *matCellDef="let u">
+        <mat-select [ngModel]="u.role" (ngModelChange)="changeRole(u, $event)">
+          <mat-option value="ADMIN">Admin</mat-option>
+          <mat-option value="VOLUNTEER">Volunteer</mat-option>
+        </mat-select>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="enabled">
+      <th mat-header-cell *matHeaderCellDef>Enabled</th>
+      <td mat-cell *matCellDef="let u">
+        <mat-slide-toggle [checked]="u.enabled" (change)="toggleEnabled(u)"></mat-slide-toggle>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let u">
+        <button mat-icon-button color="warn" (click)="remove(u)" title="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

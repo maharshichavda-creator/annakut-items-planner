@@ -1,0 +1,73 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Festival years</h2>
+    <button mat-flat-button color="primary" (click)="openAddForm()">
+      <mat-icon>add</mat-icon>
+      Add year
+    </button>
+  </div>
+  <p class="muted">Create a new year to start fresh planning while keeping every previous year's allocations intact.</p>
+
+  @if (showForm()) {
+    <mat-card class="form-card">
+      <mat-card-content>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="narrow">
+            <mat-label>Year</mat-label>
+            <input matInput type="number" [(ngModel)]="form.year" name="year" required />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="form.name" name="name" required />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <input matInput [(ngModel)]="form.location" name="location" />
+          </mat-form-field>
+        </div>
+        <div class="form-actions">
+          <button mat-flat-button color="primary" (click)="save()">Save</button>
+          <button mat-button (click)="cancelForm()">Cancel</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <table mat-table [dataSource]="events()" class="mat-elevation-z1 full-width">
+    <ng-container matColumnDef="year">
+      <th mat-header-cell *matHeaderCellDef>Year</th>
+      <td mat-cell *matCellDef="let e">{{ e.year }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let e">{{ e.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef>Location</th>
+      <td mat-cell *matCellDef="let e">{{ e.location }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="active">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let e">
+        <mat-chip [color]="e.active ? 'primary' : undefined" selected>{{ e.active ? 'Active' : 'Inactive' }}</mat-chip>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let e">
+        @if (!e.active) {
+          <button mat-button color="primary" (click)="activate(e)">Make active</button>
+        } @else {
+          <button mat-button color="warn" (click)="deactivate(e)">Make inactive</button>
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
