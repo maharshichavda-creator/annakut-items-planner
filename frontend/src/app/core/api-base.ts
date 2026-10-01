@@ -1,4 +1,11 @@
-// Base URL for the Spring Boot backend. During `ng serve` this points straight
-// at the local API; for a production build, update this (or wire up Angular
-// environment files) to point at the deployed backend URL.
-export const API_BASE_URL = 'http://localhost:8080/api';
+// Base URL for the Spring Boot backend. During `ng serve` this points at the
+// local API; once deployed (e.g. on Render), the same build automatically
+// targets the deployed backend based on the page's hostname.
+function resolveApiBaseUrl(): string {
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    return 'https://annakut-items-planner-backend.onrender.com/api';
+  }
+  return 'http://localhost:8080/api';
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
