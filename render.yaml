@@ -6,7 +6,7 @@ services:
     rootDir: backend
     dockerfilePath: ./Dockerfile
     plan: free
-    region: singapore
+    region: oregon
     envVars:
       # Reuses an existing Render Postgres; values are entered in the dashboard when the Blueprint is created.
       - key: DB_HOST
