@@ -1,9 +1,3 @@
-databases:
-  - name: parasabha-planner-db
-    databaseName: parasabha_planner
-    user: parasabha
-    plan: free
-
 services:
   # --- Backend: Spring Boot REST API (Docker) ---
   - type: web
@@ -13,53 +7,41 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     plan: free
+    region: oregon
     envVars:
+      # Reuses the existing parasabha-planner-db (Render allows only one free Postgres).
+      # Enter these in the dashboard; the app creates and uses its own "annakut" schema.
       - key: DB_HOST
-        fromDatabase:
-          name: parasabha-planner-db
-          property: host
+        sync: false
       - key: DB_PORT
-        fromDatabase:
-          name: parasabha-planner-db
-          property: port
+        value: "5432"
       - key: DB_NAME
-        fromDatabase:
-          name: parasabha-planner-db
-          property: database
-      - key: DB_USERNAME
-        fromDatabase:
-          name: parasabha-planner-db
-          property: user
+        sync: false
+      - key: DB_USER
+        sync: false
       - key: DB_PASSWORD
-        fromDatabase:
-          name: parasabha-planner-db
-          property: password
-      # Update this if Render assigns your frontend a different URL (e.g. due to a name clash).
-      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: APP_JWT_SECRET
+        generateValue: true
+      # Must match the frontend's URL; update if Render assigns a different one.
+      - key: APP_CORS_ORIGINS
         value: https://annakut-items-planner.onrender.com
+      # Keep the JVM within the free plan's 512 MB limit.
+      - key: JAVA_TOOL_OPTIONS
+        value: "-Xmx320m -XX:+UseSerialGC"
 
   # --- Frontend: Angular static site ---
   - type: web
     name: annakut-items-planner
     runtime: static
     rootDir: frontend
-    buildCommand: npm ci && npm run build:render
+    buildCommand: npm ci && npm run build
     staticPublishPath: dist/frontend/browser
     envVars:
-      # Angular 22's CLI requires Node >=22.22.3 / >=24.15.0 / >=26.0.0; pin an explicit
-      # LTS version since Render's current default (24.14.1) doesn't satisfy that.
+      # Angular 22's CLI requires Node >=22.22.3; Render's default Node is older.
       - key: NODE_VERSION
         value: "22.22.3"
-      # Update this if Render assigns your backend a different URL (e.g. due to a name clash).
-      - key: API_BASE_URL
-        value: https://annakut-items-planner-backend.onrender.com/api
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
-    # NOTE: Render's Blueprint spec (render.yaml) does not support a `headers:` field
-    # for static sites -- custom response headers must be configured manually in the
-    # Render Dashboard (Settings > Redirects/Rewrites & Headers) for this service:
-    #   Path: /manifest.webmanifest   Name: Content-Type    Value: application/manifest+json
-    #   Path: /ngsw-worker.js         Name: Cache-Control   Value: no-cache
-    # See https://render.com/docs/static-site-headers
