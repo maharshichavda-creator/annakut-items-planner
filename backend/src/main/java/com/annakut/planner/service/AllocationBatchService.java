@@ -23,20 +23,17 @@ public class AllocationBatchService {
     private final ItemRepository itemRepository;
     private final HaribhaktRepository haribhaktRepository;
     private final FestivalEventRepository festivalEventRepository;
-    private final UserRepository userRepository;
 
     public AllocationBatchService(AllocationBatchRepository batchRepository,
                                    AllocationItemRepository itemAllocationRepository,
                                    ItemRepository itemRepository,
                                    HaribhaktRepository haribhaktRepository,
-                                   FestivalEventRepository festivalEventRepository,
-                                   UserRepository userRepository) {
+                                   FestivalEventRepository festivalEventRepository) {
         this.batchRepository = batchRepository;
         this.itemAllocationRepository = itemAllocationRepository;
         this.itemRepository = itemRepository;
         this.haribhaktRepository = haribhaktRepository;
         this.festivalEventRepository = festivalEventRepository;
-        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -121,9 +118,7 @@ public class AllocationBatchService {
             batch.setAllocatedDate(Instant.now());
         }
         if (request.status() == BatchStatus.ALLOCATED) {
-            batch.setAllocatedBy(userRepository.findByUsername(username)
-                    .map(User::getFullName)
-                    .orElse(username));
+            batch.setAllocatedBy(username);
         }
         if (request.notes() != null) {
             batch.setNotes(request.notes());
