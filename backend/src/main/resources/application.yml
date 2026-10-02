@@ -34,7 +34,7 @@ app:
     secret: ${APP_JWT_SECRET:YW5uYWt1dC1pdGVtcy1wbGFubmVyLXN1cGVyLXNlY3JldC1rZXktY2hhbmdlLW1lLWluLXByb2R1Y3Rpb24=}
     expiration-ms: ${APP_JWT_EXPIRATION_MS:86400000}
   cors:
-    allowed-origins: ${APP_CORS_ORIGINS:http://localhost:4200}
+    allowed-origins: ${APP_CORS_ORIGINS:http://localhost:4201}
 
 logging:
   level:

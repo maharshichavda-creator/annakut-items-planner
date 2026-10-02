@@ -37,7 +37,7 @@ services:
       - key: APP_JWT_SECRET
         generateValue: true
       - key: APP_CORS_ORIGINS
-        value: https://annakut-items-planner-frontend.onrender.com
+        value: https://annakut-items-planner.onrender.com
 
   - type: web
     name: annakut-items-planner-frontend
