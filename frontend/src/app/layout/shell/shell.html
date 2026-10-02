@@ -1,39 +1,48 @@
-<mat-sidenav-container class="shell-container">
-  <mat-sidenav mode="side" opened class="shell-sidenav">
+<mat-sidenav-container class="shell-container" autosize>
+  <mat-sidenav
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="isMobile() ? mobileOpen() : true"
+    (closedStart)="mobileOpen.set(false)"
+    class="shell-sidenav"
+    [class.collapsed]="collapsed() && !isMobile()"
+  >
     <div class="brand">
       <img src="assets/annakut-logo.png" alt="Annakut Mahotsav" class="brand-logo" />
-      <div class="brand-text">
+      <div class="brand-text nav-label">
         <span>BAPS શ્રી સ્વામિનારાયણ મંદિર, પુણે</span>
       </div>
     </div>
     <mat-nav-list>
       @if (auth.isAdmin()) {
-        <a mat-list-item routerLink="/users" routerLinkActive="active-link">
+        <a mat-list-item routerLink="/users" routerLinkActive="active-link" (click)="onNavigate()" [matTooltip]="collapsed() && !isMobile() ? 'Users' : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
-          <span matListItemTitle>Users</span>
+          <span matListItemTitle class="nav-label">Users</span>
         </a>
-        <a mat-list-item routerLink="/festival-years" routerLinkActive="active-link">
+        <a mat-list-item routerLink="/festival-years" routerLinkActive="active-link" (click)="onNavigate()" [matTooltip]="collapsed() && !isMobile() ? 'Festival Years' : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>event</mat-icon>
-          <span matListItemTitle>Festival Years</span>
+          <span matListItemTitle class="nav-label">Festival Years</span>
         </a>
       }
-      <a mat-list-item routerLink="/items" routerLinkActive="active-link">
+      <a mat-list-item routerLink="/items" routerLinkActive="active-link" (click)="onNavigate()" [matTooltip]="collapsed() && !isMobile() ? 'Items' : ''" matTooltipPosition="right">
         <mat-icon matListItemIcon>restaurant_menu</mat-icon>
-        <span matListItemTitle>Items</span>
+        <span matListItemTitle class="nav-label">Items</span>
       </a>
-      <a mat-list-item routerLink="/haribhakts" routerLinkActive="active-link">
+      <a mat-list-item routerLink="/haribhakts" routerLinkActive="active-link" (click)="onNavigate()" [matTooltip]="collapsed() && !isMobile() ? 'Haribhakts' : ''" matTooltipPosition="right">
         <mat-icon matListItemIcon>groups</mat-icon>
-        <span matListItemTitle>Haribhakts</span>
+        <span matListItemTitle class="nav-label">Haribhakts</span>
       </a>
-      <a mat-list-item routerLink="/allocations" routerLinkActive="active-link">
+      <a mat-list-item routerLink="/allocations" routerLinkActive="active-link" (click)="onNavigate()" [matTooltip]="collapsed() && !isMobile() ? 'Allocations' : ''" matTooltipPosition="right">
         <mat-icon matListItemIcon>assignment_turned_in</mat-icon>
-        <span matListItemTitle>Allocations</span>
+        <span matListItemTitle class="nav-label">Allocations</span>
       </a>
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content>
     <mat-toolbar class="shell-toolbar">
+      <button mat-icon-button (click)="toggleMenu()" aria-label="Toggle menu" matTooltip="Menu">
+        <mat-icon>menu</mat-icon>
+      </button>
       <img src="assets/annakut-logo.png" alt="" class="toolbar-logo" />
       <span>અન્નકૂટ મહોત્સવ વાનગી ફાળવણી</span>
       @if (activeYear()) {
