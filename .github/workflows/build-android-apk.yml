@@ -1,4 +1,4 @@
-﻿name: Build Android Debug APK
+name: Build Android Debug APK
 
 on:
   push:
@@ -44,6 +44,9 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      - name: Remove previous APK so it is not bundled into the new app
+        run: rm -f frontend/public/downloads/*.apk
+
       - name: Build mobile web bundle and sync Capacitor
         working-directory: frontend
         run: npm run cap:sync
@@ -58,6 +61,23 @@ jobs:
 
       - name: Rename APK
         run: cp frontend/android/app/build/outputs/apk/debug/app-debug.apk annakut-planner-debug.apk
+
+      - name: Copy APK into frontend/public/downloads
+        run: |
+          mkdir -p frontend/public/downloads
+          cp annakut-planner-debug.apk frontend/public/downloads/annakut-planner-debug.apk
+
+      - name: Commit and push APK
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add frontend/public/downloads/annakut-planner-debug.apk
+          if git diff --cached --quiet; then
+            echo "No changes to the APK; skipping commit."
+          else
+            git commit -m "chore(android): rebuild debug APK via GitHub Actions [skip ci]"
+            git push origin HEAD:main
+          fi
 
       - name: Upload APK as workflow artifact
         uses: actions/upload-artifact@v5
