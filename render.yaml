@@ -46,8 +46,6 @@ services:
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist/frontend/browser
-    plan: free
-    region: singapore
     routes:
       - type: rewrite
         source: /*
