@@ -216,6 +216,26 @@ export class Allocations implements OnInit {
     });
   }
 
+  sendWhatsApp(batch: AllocationBatch): void {
+    const lines = batch.items.map((item, i) => `${i + 1}. ${item.itemName} - ${item.quantity}`);
+    const message =
+      `Jay Swaminarayan ${batch.haribhaktName},\n\n` +
+      `Annakut Mahotsav ${batch.eventYear} - items allocated to you (Batch #${batch.batchNumber}):\n\n` +
+      `${lines.join('\n')}\n\nThank you.`;
+
+    // wa.me needs digits only with country code; assume India (+91) for bare 10-digit numbers.
+    let phone = (batch.haribhaktMobile ?? '').replace(/\D/g, '');
+    if (phone.length === 11 && phone.startsWith('0')) {
+      phone = phone.slice(1);
+    }
+    if (phone.length === 10) {
+      phone = '91' + phone;
+    }
+    if (!phone) {
+      this.snackBar.open('No mobile number saved - choose the contact in WhatsApp', 'OK', { duration: 3500 });
+    }
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+  }
   statusLabel(status: BatchStatus): string {
     switch (status) {
       case 'PENDING':

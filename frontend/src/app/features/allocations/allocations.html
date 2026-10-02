@@ -198,7 +198,15 @@
     @if (expandedBatchId() === batch.id) {
       <mat-card class="batch-detail">
         <mat-card-content>
-          <h3>Batch #{{ batch.batchNumber }} - {{ batch.haribhaktName }}</h3>
+          <div class="batch-detail-header">
+            <h3>Batch #{{ batch.batchNumber }} - {{ batch.haribhaktName }}</h3>
+            @if (batch.status === 'ALLOCATED') {
+              <button mat-flat-button class="whatsapp-button" (click)="sendWhatsApp(batch)">
+                <mat-icon>chat</mat-icon>
+                WhatsApp
+              </button>
+            }
+          </div>
           <table class="nested-table">
             <tr>
               <th>Item</th>

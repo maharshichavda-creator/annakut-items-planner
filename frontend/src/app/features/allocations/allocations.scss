@@ -121,6 +121,23 @@ table {
   margin-top: -8px;
 }
 
+.batch-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.whatsapp-button {
+  margin-left: auto;
+  background: #25d366;
+  color: #fff;
+}
+
 .nested-table {
   width: 100%;
   border-collapse: collapse;
