@@ -217,7 +217,7 @@ export class Allocations implements OnInit {
   }
 
   sendWhatsApp(batch: AllocationBatch): void {
-    const lines = batch.items.map((item, i) => `${i + 1}. ${item.itemName} - ${item.quantity}`);
+    const lines = batch.items.map((item, i) => `${i + 1}. ${item.itemName} (${item.itemCategory}) - ${item.quantity}`);
     const message =
       `Jay Swaminarayan ${batch.haribhaktName},\n\n` +
       `Annakut Mahotsav ${batch.eventYear} - items allocated to you (Batch #${batch.batchNumber}):\n\n` +
