@@ -85,6 +85,7 @@ export interface AllocationBatch {
   batchNumber: number;
   status: BatchStatus;
   allocatedDate: string | null;
+  allocatedBy: string | null;
   notes: string | null;
   items: BatchItem[];
 }

@@ -61,7 +61,7 @@ export class Allocations implements OnInit {
   filterStatus = signal<BatchStatus | null>(null);
   expandedBatchId = signal<number | null>(null);
 
-  batchColumns = ['batchNumber', 'haribhakt', 'itemCount', 'status', 'allocatedDate', 'actions'];
+  batchColumns = ['batchNumber', 'haribhakt', 'itemCount', 'status', 'allocatedDate', 'allocatedBy', 'actions'];
 
   allocatedItemIds = computed(() => {
     const ids = new Set<number>();

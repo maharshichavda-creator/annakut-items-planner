@@ -36,6 +36,9 @@ public class AllocationBatch {
     @Column(name = "allocated_date")
     private Instant allocatedDate;
 
+    @Column(name = "allocated_by", length = 150)
+    private String allocatedBy;
+
     private String notes;
 
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -105,6 +108,14 @@ public class AllocationBatch {
 
     public void setAllocatedDate(Instant allocatedDate) {
         this.allocatedDate = allocatedDate;
+    }
+
+    public String getAllocatedBy() {
+        return allocatedBy;
+    }
+
+    public void setAllocatedBy(String allocatedBy) {
+        this.allocatedBy = allocatedBy;
     }
 
     public String getNotes() {

@@ -7,6 +7,7 @@ import com.annakut.planner.dto.BulkAllocationRequest;
 import com.annakut.planner.service.AllocationBatchService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,8 +53,9 @@ public class AllocationBatchController {
     }
 
     @PatchMapping("/{id}/status")
-    public AllocationBatchDto updateStatus(@PathVariable Long id, @Valid @RequestBody BatchStatusUpdateRequest request) {
-        return allocationBatchService.updateStatus(id, request);
+    public AllocationBatchDto updateStatus(@PathVariable Long id, @Valid @RequestBody BatchStatusUpdateRequest request,
+                                           Authentication authentication) {
+        return allocationBatchService.updateStatus(id, request, authentication.getName());
     }
 
     @DeleteMapping("/{id}")

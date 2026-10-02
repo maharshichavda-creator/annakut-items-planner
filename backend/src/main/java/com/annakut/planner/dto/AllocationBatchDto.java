@@ -16,6 +16,7 @@ public record AllocationBatchDto(
         Integer batchNumber,
         BatchStatus status,
         Instant allocatedDate,
+        String allocatedBy,
         String notes,
         List<BatchItemDto> items
 ) {
@@ -30,6 +31,7 @@ public record AllocationBatchDto(
                 b.getBatchNumber(),
                 b.getStatus(),
                 b.getAllocatedDate(),
+                b.getAllocatedBy(),
                 b.getNotes(),
                 b.getItems().stream().map(BatchItemDto::from).toList()
         );
