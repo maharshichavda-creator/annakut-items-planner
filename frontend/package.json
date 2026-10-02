@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "build:mobile": "ng build --configuration mobile",
+    "test": "ng test",
+    "cap:sync": "npm run build:mobile && npx cap sync android"
   },
   "private": true,
   "packageManager": "npm@11.19.1",
@@ -21,6 +23,9 @@
     "@angular/platform-browser": "^22.1.0",
     "@angular/router": "^22.1.0",
     "@angular/service-worker": "^22.2.1",
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app-launcher": "^8.0.1",
+    "@capacitor/core": "^8.5.2",
     "material-icons": "^1.13.14",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
@@ -29,6 +34,7 @@
     "@angular/build": "^22.1.8",
     "@angular/cli": "^22.1.8",
     "@angular/compiler-cli": "^22.1.0",
+    "@capacitor/cli": "^8.5.2",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",

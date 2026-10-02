@@ -13,6 +13,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Capacitor } from '@capacitor/core';
+import { AppLauncher } from '@capacitor/app-launcher';
 import { AuthService } from '../../core/auth.service';
 import { AllocationBatch, BatchStatus, FestivalEvent, Haribhakt, Item } from '../../core/models';
 import { ItemService } from '../items/item.service';
@@ -234,7 +236,13 @@ export class Allocations implements OnInit {
     if (!phone) {
       this.snackBar.open('No mobile number saved - choose the contact in WhatsApp', 'OK', { duration: 3500 });
     }
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    if (Capacitor.isNativePlatform()) {
+      // window.open does not leave the Android WebView; hand the link to the OS so WhatsApp opens.
+      AppLauncher.openUrl({ url });
+    } else {
+      window.open(url, '_blank', 'noopener');
+    }
   }
   statusLabel(status: BatchStatus): string {
     switch (status) {
