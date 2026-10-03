@@ -246,8 +246,6 @@ export class Allocations implements OnInit {
   }
   statusLabel(status: BatchStatus): string {
     switch (status) {
-      case 'PENDING':
-        return 'Pending';
       case 'ALLOCATED':
         return 'Allocated';
       case 'COLLECTED':
@@ -257,8 +255,6 @@ export class Allocations implements OnInit {
 
   statusClass(status: BatchStatus): string {
     switch (status) {
-      case 'PENDING':
-        return 'status-pending';
       case 'ALLOCATED':
         return 'status-allocated';
       case 'COLLECTED':

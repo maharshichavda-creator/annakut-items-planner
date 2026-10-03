@@ -31,7 +31,7 @@ public class AllocationBatch {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private BatchStatus status = BatchStatus.PENDING;
+    private BatchStatus status = BatchStatus.ALLOCATED;
 
     @Column(name = "allocated_date")
     private Instant allocatedDate;

@@ -38,8 +38,8 @@ public class AllocationBatchController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AllocationBatchDto create(@Valid @RequestBody BulkAllocationRequest request) {
-        return allocationBatchService.createBatch(request);
+    public AllocationBatchDto create(@Valid @RequestBody BulkAllocationRequest request, Authentication authentication) {
+        return allocationBatchService.createBatch(request, authentication.getName());
     }
 
     @PostMapping("/{id}/items")

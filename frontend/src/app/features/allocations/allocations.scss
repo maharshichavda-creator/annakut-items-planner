@@ -179,23 +179,16 @@ table {
 
 // Custom batch status colors (Material's built-in primary/accent/warn palette
 // doesn't cover these, so the chip background/text is set directly).
-::ng-deep .status-pending {
-  --mdc-chip-elevated-container-color: #ffe9a8;
-  --mdc-chip-label-text-color: #6b5900;
-  background-color: #ffe9a8 !important;
-  color: #6b5900 !important;
-}
-
 ::ng-deep .status-allocated {
-  --mdc-chip-elevated-container-color: #4caf50;
-  --mdc-chip-label-text-color: #ffffff;
-  background-color: #4caf50 !important;
-  color: #ffffff !important;
+  --mdc-chip-elevated-container-color: #fff7b3;
+  --mdc-chip-label-text-color: #5f5400;
+  background-color: #fff7b3 !important;
+  color: #5f5400 !important;
 }
 
 ::ng-deep .status-collected {
-  --mdc-chip-elevated-container-color: #a1887f;
-  --mdc-chip-label-text-color: #ffffff;
-  background-color: #a1887f !important;
-  color: #ffffff !important;
+  --mdc-chip-elevated-container-color: #87ceeb;
+  --mdc-chip-label-text-color: #0b3a52;
+  background-color: #87ceeb !important;
+  color: #0b3a52 !important;
 }

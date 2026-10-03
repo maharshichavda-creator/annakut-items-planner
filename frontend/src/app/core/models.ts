@@ -64,7 +64,7 @@ export interface FestivalEventRequest {
   active?: boolean;
 }
 
-export type BatchStatus = 'PENDING' | 'ALLOCATED' | 'COLLECTED';
+export type BatchStatus = 'ALLOCATED' | 'COLLECTED';
 
 export interface BatchItem {
   id: number;

@@ -60,7 +60,7 @@ public class AllocationBatchService {
      * haribhakt in a single transaction. An item already sitting in another
      * batch for the same festival year is rejected.
      */
-    public AllocationBatchDto createBatch(BulkAllocationRequest request) {
+    public AllocationBatchDto createBatch(BulkAllocationRequest request, String username) {
         FestivalEvent event = request.eventId() != null ? findEvent(request.eventId()) : resolveActiveEvent();
         Haribhakt haribhakt = haribhaktRepository.findById(request.haribhaktId())
                 .orElseThrow(() -> new ResourceNotFoundException("Haribhakt not found: " + request.haribhaktId()));
@@ -70,6 +70,9 @@ public class AllocationBatchService {
         batch.setHaribhakt(haribhakt);
         batch.setBatchNumber(nextBatchNumber(event.getId()));
         batch.setNotes(request.notes());
+        batch.setStatus(BatchStatus.ALLOCATED);
+        batch.setAllocatedDate(Instant.now());
+        batch.setAllocatedBy(username);
 
         int quantity = request.quantity() == null ? 1 : request.quantity();
         for (Long itemId : request.itemIds()) {
@@ -108,13 +111,13 @@ public class AllocationBatchService {
     /**
      * Updates the status of the whole batch (e.g. ALLOCATED or COLLECTED).
      * Every item inside the batch is considered to share this status. The
-     * allocated date is stamped the first time the batch leaves PENDING, and
-     * the acting user is recorded only when the batch is moved to ALLOCATED.
+     * allocated date is stamped if it is not already set, and the acting
+     * user is recorded whenever the batch is moved to ALLOCATED.
      */
     public AllocationBatchDto updateStatus(Long id, BatchStatusUpdateRequest request, String username) {
         AllocationBatch batch = findBatch(id);
         batch.setStatus(request.status());
-        if (request.status() != BatchStatus.PENDING && batch.getAllocatedDate() == null) {
+        if (batch.getAllocatedDate() == null) {
             batch.setAllocatedDate(Instant.now());
         }
         if (request.status() == BatchStatus.ALLOCATED) {
