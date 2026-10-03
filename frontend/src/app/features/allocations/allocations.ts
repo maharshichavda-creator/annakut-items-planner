@@ -223,7 +223,7 @@ export class Allocations implements OnInit {
     const message =
       `Jay Swaminarayan ${batch.haribhaktName},\n\n` +
       `Annakut Mahotsav ${batch.eventYear} - items allocated to you (Batch #${batch.batchNumber}):\n\n` +
-      `${lines.join('\n')}\n\nThank you.`;
+      `${lines.join('\n')}\n\nThank you.\nBAPS Shri Swaminarayan Mandir, Pune.`;
 
     // wa.me needs digits only with country code; assume India (+91) for bare 10-digit numbers.
     let phone = (batch.haribhaktMobile ?? '').replace(/\D/g, '');
