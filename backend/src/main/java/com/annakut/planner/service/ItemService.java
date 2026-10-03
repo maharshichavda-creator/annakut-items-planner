@@ -50,13 +50,8 @@ public class ItemService {
 
     public void delete(Long id) {
         Item item = findEntity(id);
-        if (!allocationItemRepository.findByItemId(id).isEmpty()) {
-            // Keep allocation history intact: soft-delete instead of a hard delete
-            // when the item has ever been part of an allocation batch.
-            item.setActive(false);
-            itemRepository.save(item);
-            return;
-        }
+        // Permanent delete: allocations referencing the item are removed with it.
+        allocationItemRepository.deleteAll(allocationItemRepository.findByItemId(id));
         itemRepository.delete(item);
     }
 

@@ -109,7 +109,7 @@ export class Items implements OnInit, AfterViewInit {
   }
 
   remove(item: Item): void {
-    if (!confirm(`Delete item "${item.name}"?`)) {
+    if (!confirm(`Permanently delete item "${item.name}"? Any allocations of this item will also be removed.`)) {
       return;
     }
     this.itemService.delete(item.id).subscribe({
