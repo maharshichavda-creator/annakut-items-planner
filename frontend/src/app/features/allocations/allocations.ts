@@ -1,7 +1,8 @@
-import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, TemplateRef, ViewChild, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { EMPTY, catchError, exhaustMap, filter, forkJoin, fromEvent, interval, merge } from 'rxjs';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -45,6 +46,7 @@ import { AllocationBatchService } from './allocation-batch.service';
   styleUrl: './allocations.scss',
 })
 export class Allocations implements OnInit {
+  private destroyRef = inject(DestroyRef);
   events = signal<FestivalEvent[]>([]);
   selectedEventId = signal<number | null>(null);
   haribhakts = signal<Haribhakt[]>([]);
@@ -155,10 +157,64 @@ export class Allocations implements OnInit {
       }
     });
     this.haribhaktService.list().subscribe((list) => this.haribhakts.set(list));
+    this.startAutoRefresh();
   }
 
-  onEventChange(): void {
-    this.loadEventData();
+  // Pick up changes made from other devices. Batches (what changes on every allocation) are polled every few
+  // seconds; the larger reference lists are refreshed less often. Both also refresh when the page regains focus.
+  private startAutoRefresh(): void {
+    const onReturn$ = merge(fromEvent(document, 'visibilitychange'), fromEvent(window, 'focus'));
+    const canRefresh = () => !document.hidden && this.selectedEventId() !== null;
+
+    merge(interval(5000), onReturn$)
+      .pipe(
+        filter(canRefresh),
+        exhaustMap(() => this.allocationBatchService.list(this.selectedEventId()!).pipe(catchError(() => EMPTY))),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((batches) => {
+        this.setIfChanged(this.batches, batches);
+        this.dropUnavailableSelections();
+      });
+
+    merge(interval(60000), onReturn$)
+      .pipe(
+        filter(canRefresh),
+        exhaustMap(() =>
+          forkJoin({
+            events: this.festivalEventService.list(),
+            haribhakts: this.haribhaktService.list(),
+            items: this.itemService.list(true),
+          }).pipe(catchError(() => EMPTY))
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(({ events, haribhakts, items }) => {
+        this.setIfChanged(this.events, events);
+        this.setIfChanged(this.haribhakts, haribhakts);
+        this.setIfChanged(this.activeItems, items);
+        this.dropUnavailableSelections();
+      });
+  }
+  private setIfChanged<T>(target: { (): T; set(value: T): void }, next: T): void {
+    if (JSON.stringify(target()) !== JSON.stringify(next)) {
+      target.set(next);
+    }
+  }
+
+  // Items allocated elsewhere must not stay ticked in a pending selection.
+  private dropUnavailableSelections(): void {
+    const available = new Set(this.availableItems().map((i) => i.id));
+    for (const selection of [this.selectedItemIds, this.additionSelectedIds]) {
+      const current = selection();
+      const kept = new Set([...current].filter((id) => available.has(id)));
+      if (kept.size !== current.size) {
+        selection.set(kept);
+      }
+    }
+  }
+
+  onEventChange(): void {    this.loadEventData();
   }
 
   loadEventData(): void {
