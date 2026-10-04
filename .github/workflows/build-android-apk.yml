@@ -13,7 +13,6 @@ on:
       - 'frontend/angular.json'
       - '.github/workflows/build-android-apk.yml'
   # Manual runs: Actions tab > Build Android Debug APK > Run workflow.
-  # Note: commits containing "[skip ci]" never trigger this workflow.
   workflow_dispatch: {}
 
 permissions:
