@@ -192,3 +192,80 @@ table {
   background-color: #87ceeb !important;
   color: #0b3a52 !important;
 }
+
+.form-row app-haribhakt-select,
+.top-controls app-haribhakt-select {
+  flex: 1 1 220px;
+}
+
+// Batch items dialog
+.dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 12px 0 24px;
+
+  h2 {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.dialog-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(0, 0, 0, 0.7);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.dialog-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #895200;
+  margin-bottom: 8px;
+}
+
+.dialog-items {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px 6px 12px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    background: #fbf5ec;
+    border-left: 3px solid #c7812a;
+  }
+}
+
+.dialog-item-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.dialog-item-category {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #f1e2c8;
+  color: #6b4400;
+  white-space: nowrap;
+}
+
+.dialog-item-qty {
+  min-width: 28px;
+  text-align: right;
+  font-weight: 600;
+}

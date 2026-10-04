@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Capacitor } from '@capacitor/core';
 import { AppLauncher } from '@capacitor/app-launcher';
@@ -20,6 +20,7 @@ import { AllocationBatch, BatchStatus, FestivalEvent, Haribhakt, Item } from '..
 import { ItemService } from '../items/item.service';
 import { HaribhaktService } from '../haribhakts/haribhakt.service';
 import { FestivalEventService } from '../festival-events/festival-event.service';
+import { HaribhaktSelect } from '../../shared/haribhakt-select/haribhakt-select';
 import { AllocationBatchService } from './allocation-batch.service';
 
 @Component({
@@ -37,7 +38,8 @@ import { AllocationBatchService } from './allocation-batch.service';
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
-    MatExpansionModule,
+    MatDialogModule,
+    HaribhaktSelect,
   ],
   templateUrl: './allocations.html',
   styleUrl: './allocations.scss',
@@ -63,7 +65,11 @@ export class Allocations implements OnInit {
   filterStatus = signal<BatchStatus | null>(null);
   expandedBatchId = signal<number | null>(null);
 
-  batchColumns = ['batchNumber', 'haribhakt', 'itemCount', 'status', 'allocatedDate', 'allocatedBy', 'actions'];
+  @ViewChild('batchDialog') batchDialog!: TemplateRef<unknown>;
+
+  expandedBatch = computed(() => this.batches().find((b) => b.id === this.expandedBatchId()) ?? null);
+
+  batchColumns = ['haribhakt', 'itemCount', 'status', 'allocatedDate', 'allocatedBy', 'actions'];
 
   allocatedItemIds = computed(() => {
     const ids = new Set<number>();
@@ -135,7 +141,8 @@ export class Allocations implements OnInit {
     private haribhaktService: HaribhaktService,
     private festivalEventService: FestivalEventService,
     private allocationBatchService: AllocationBatchService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -189,7 +196,7 @@ export class Allocations implements OnInit {
       .create({ eventId, haribhaktId: this.newBatchHaribhaktId, itemIds, notes: this.newBatchNotes || null })
       .subscribe({
         next: (batch) => {
-          this.snackBar.open(`Batch #${batch.batchNumber} created with ${itemIds.length} item(s)`, 'OK', {
+          this.snackBar.open(`Allocated ${itemIds.length} item(s)`, 'OK', {
             duration: 3000,
           });
           this.newBatchHaribhaktId = null;
@@ -201,15 +208,22 @@ export class Allocations implements OnInit {
       });
   }
 
-  toggleExpand(batchId: number): void {
-    this.expandedBatchId.set(this.expandedBatchId() === batchId ? null : batchId);
+  openBatchDialog(batchId: number): void {
+    this.expandedBatchId.set(batchId);
     this.addingToBatchId.set(null);
+    this.dialog
+      .open(this.batchDialog, { width: '520px', maxWidth: '95vw', autoFocus: false })
+      .afterClosed()
+      .subscribe(() => {
+        this.expandedBatchId.set(null);
+        this.addingToBatchId.set(null);
+      });
   }
 
   updateStatus(batch: AllocationBatch, status: BatchStatus): void {
     this.allocationBatchService.updateStatus(batch.id, status).subscribe({
       next: () => {
-        this.snackBar.open(`Batch #${batch.batchNumber} marked ${this.statusLabel(status).toLowerCase()}`, 'OK', {
+        this.snackBar.open(`Items for ${batch.haribhaktName} marked ${this.statusLabel(status).toLowerCase()}`, 'OK', {
           duration: 2500,
         });
         this.loadEventData();
@@ -222,7 +236,7 @@ export class Allocations implements OnInit {
     const lines = batch.items.map((item, i) => `${i + 1}. ${item.itemName} (${item.itemCategory}) - ${item.quantity}`);
     const message =
       `Jay Swaminarayan ${batch.haribhaktName},\n\n` +
-      `Annakut Mahotsav ${batch.eventYear} - items allocated to you (Batch #${batch.batchNumber}):\n\n` +
+      `Annakut Mahotsav ${batch.eventYear} - items allocated to you:\n\n` +
       `${lines.join('\n')}\n\nThank you.\nBAPS Shri Swaminarayan Mandir, Pune.`;
 
     // wa.me needs digits only with country code; assume India (+91) for bare 10-digit numbers.
@@ -263,12 +277,12 @@ export class Allocations implements OnInit {
   }
 
   deleteBatch(batch: AllocationBatch): void {
-    if (!confirm(`Cancel batch #${batch.batchNumber} for ${batch.haribhaktName}? All its items will become unallocated.`)) {
+    if (!confirm(`Cancel the allocation for ${batch.haribhaktName}? All its items will become unallocated.`)) {
       return;
     }
     this.allocationBatchService.delete(batch.id).subscribe({
       next: () => {
-        this.snackBar.open(`Batch #${batch.batchNumber} cancelled`, 'OK', { duration: 2500 });
+        this.snackBar.open(`Allocation for ${batch.haribhaktName} cancelled`, 'OK', { duration: 2500 });
         this.loadEventData();
       },
       error: (err) => this.snackBar.open(err?.error?.message ?? 'Delete failed', 'OK', { duration: 4000 }),
@@ -307,7 +321,7 @@ export class Allocations implements OnInit {
     }
     this.allocationBatchService.addItems(batch.id, itemIds).subscribe({
       next: () => {
-        this.snackBar.open(`${itemIds.length} item(s) added to batch #${batch.batchNumber}`, 'OK', { duration: 2500 });
+        this.snackBar.open(`${itemIds.length} item(s) added for ${batch.haribhaktName}`, 'OK', { duration: 2500 });
         this.addingToBatchId.set(null);
         this.loadEventData();
       },

@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../core/auth.service';
 import { Haribhakt, HaribhaktRequest } from '../../core/models';
 import { HaribhaktService } from './haribhakt.service';
 
@@ -34,7 +35,11 @@ export class Haribhakts implements OnInit {
   editing = signal<Haribhakt | null>(null);
   form: HaribhaktRequest = this.emptyForm();
 
-  constructor(private haribhaktService: HaribhaktService, private snackBar: MatSnackBar) {}
+  constructor(
+    private haribhaktService: HaribhaktService,
+    private snackBar: MatSnackBar,
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.reload();
@@ -42,6 +47,15 @@ export class Haribhakts implements OnInit {
 
   reload(): void {
     this.haribhaktService.list().subscribe((list) => this.haribhakts.set(list));
+  }
+
+  // Admins see only the last 4 digits of a mobile number.
+  displayMobile(mobile: string | null): string {
+    if (!mobile || !this.auth.isAdmin()) {
+      return mobile ?? '';
+    }
+    const visible = mobile.slice(-4);
+    return '*'.repeat(Math.max(mobile.length - visible.length, 0)) + visible;
   }
 
   openAddForm(): void {
