@@ -2,7 +2,7 @@ import { Component, DestroyRef, OnInit, TemplateRef, ViewChild, computed, inject
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { EMPTY, catchError, exhaustMap, filter, forkJoin, fromEvent, interval, merge } from 'rxjs';
+import { EMPTY, catchError, exhaustMap, filter, forkJoin, fromEvent, interval, merge, of } from 'rxjs';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -55,8 +55,8 @@ export class Allocations implements OnInit {
 
   // New batch form state
   newBatchHaribhaktId: number | null = null;
-  newBatchNotes = '';
   itemFilterText = signal('');
+  refreshing = signal(false);
   selectedItemIds = signal<Set<number>>(new Set());
 
   // Add-to-existing-batch state
@@ -217,6 +217,36 @@ export class Allocations implements OnInit {
   onEventChange(): void {    this.loadEventData();
   }
 
+  refresh(): void {
+    if (this.refreshing()) {
+      return;
+    }
+    this.refreshing.set(true);
+    const eventId = this.selectedEventId();
+    forkJoin({
+      events: this.festivalEventService.list(),
+      haribhakts: this.haribhaktService.list(),
+      items: this.itemService.list(true),
+      batches: eventId ? this.allocationBatchService.list(eventId) : of(null),
+    }).subscribe({
+      next: ({ events, haribhakts, items, batches }) => {
+        this.events.set(events);
+        this.haribhakts.set(haribhakts);
+        this.activeItems.set(items);
+        if (batches) {
+          this.batches.set(batches);
+        }
+        this.dropUnavailableSelections();
+        this.refreshing.set(false);
+        this.snackBar.open("Refreshed", "OK", { duration: 1500 });
+      },
+      error: () => {
+        this.refreshing.set(false);
+        this.snackBar.open("Refresh failed", "OK", { duration: 3000 });
+      },
+    });
+  }
+
   loadEventData(): void {
     const eventId = this.selectedEventId();
     if (!eventId) {
@@ -249,14 +279,13 @@ export class Allocations implements OnInit {
       return;
     }
     this.allocationBatchService
-      .create({ eventId, haribhaktId: this.newBatchHaribhaktId, itemIds, notes: this.newBatchNotes || null })
+      .create({ eventId, haribhaktId: this.newBatchHaribhaktId, itemIds })
       .subscribe({
         next: (batch) => {
           this.snackBar.open(`Allocated ${itemIds.length} item(s)`, 'OK', {
             duration: 3000,
           });
           this.newBatchHaribhaktId = null;
-          this.newBatchNotes = '';
           this.selectedItemIds.set(new Set());
           this.loadEventData();
         },

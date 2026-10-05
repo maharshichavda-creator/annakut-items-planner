@@ -37,7 +37,7 @@ import { ItemService } from './item.service';
   styleUrl: './items.scss',
 })
 export class Items implements OnInit, AfterViewInit {
-  displayedColumns = ['category', 'name', 'bowlCount', 'note', 'active', 'actions'];
+  displayedColumns = ['category', 'name', 'bowlCount', 'active', 'actions'];
   dataSource = new MatTableDataSource<Item>([]);
   showForm = signal(false);
   editing = signal<Item | null>(null);

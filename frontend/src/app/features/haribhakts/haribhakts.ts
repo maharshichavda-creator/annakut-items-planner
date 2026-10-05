@@ -29,7 +29,7 @@ import { HaribhaktService } from './haribhakt.service';
   styleUrl: './haribhakts.scss',
 })
 export class Haribhakts implements OnInit {
-  displayedColumns = ['name', 'mobileNumber', 'address', 'notes', 'actions'];
+  displayedColumns = ['name', 'mobileNumber', 'address', 'actions'];
   haribhakts = signal<Haribhakt[]>([]);
   showForm = signal(false);
   editing = signal<Haribhakt | null>(null);
@@ -38,7 +38,7 @@ export class Haribhakts implements OnInit {
   constructor(
     private haribhaktService: HaribhaktService,
     private snackBar: MatSnackBar,
-    private auth: AuthService
+    public auth: AuthService
   ) {}
 
   ngOnInit(): void {

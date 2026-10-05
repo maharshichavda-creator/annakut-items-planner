@@ -1,5 +1,19 @@
 <div class="page">
-  <h2>Allocations</h2>
+  <div class="page-header">
+    <h2>Allocations</h2>
+    <button
+      mat-mini-fab
+      color="primary"
+      class="refresh-btn"
+      [class.spinning]="refreshing()"
+      [disabled]="refreshing()"
+      (click)="refresh()"
+      title="Refresh"
+      aria-label="Refresh"
+    >
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
 
   <div class="stats-row">
     <mat-card class="stat-card stat-total">
@@ -91,17 +105,12 @@
           [(value)]="newBatchHaribhaktId"
           [disabled]="!isActiveYearSelected()"
         />
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Notes (optional)</mat-label>
-          <input matInput [(ngModel)]="newBatchNotes" [disabled]="!isActiveYearSelected()" />
+        <mat-form-field appearance="outline">
+          <mat-label>Search available items</mat-label>
+          <input matInput [ngModel]="itemFilterText()" (ngModelChange)="itemFilterText.set($event)" [disabled]="!isActiveYearSelected()" />
+          <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </div>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Search available items</mat-label>
-        <input matInput [ngModel]="itemFilterText()" (ngModelChange)="itemFilterText.set($event)" [disabled]="!isActiveYearSelected()" />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
 
       <div class="item-pick-list">
         @for (item of filteredAvailableItems(); track item.id) {
