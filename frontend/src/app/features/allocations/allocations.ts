@@ -106,7 +106,11 @@ export class Allocations implements OnInit {
     if (status) {
       batches = batches.filter((b) => b.status === status);
     }
-    return [...batches].sort((a, b) => a.batchNumber - b.batchNumber);
+    return [...batches].sort(
+      (a, b) =>
+        a.haribhaktName.localeCompare(b.haribhaktName, undefined, { sensitivity: 'base' }) ||
+        a.batchNumber - b.batchNumber,
+    );
   });
 
   // Mutating actions (create/allocate/collect/etc.) are only allowed while the

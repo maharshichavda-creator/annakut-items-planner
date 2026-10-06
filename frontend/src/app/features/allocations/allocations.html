@@ -136,7 +136,8 @@
     </mat-card-content>
   </mat-card>
 
-  <table mat-table [dataSource]="visibleBatches()" class="mat-elevation-z1 full-width">
+  <div class="batch-table-scroll mat-elevation-z1">
+  <table mat-table [dataSource]="visibleBatches()" class="full-width">
     <ng-container matColumnDef="haribhakt">
       <th mat-header-cell *matHeaderCellDef>Haribhakt</th>
       <td mat-cell *matCellDef="let batch">{{ batch.haribhaktName }}</td>
@@ -185,9 +186,10 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="batchColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="batchColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: batchColumns"></tr>
   </table>
+  </div>
 
 </div>
 

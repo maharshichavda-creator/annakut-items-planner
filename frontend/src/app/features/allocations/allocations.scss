@@ -137,6 +137,18 @@ table {
   width: 100%;
 }
 
+// Shows at most 20 rows (plus the sticky header); more rows scroll vertically.
+.batch-table-scroll {
+  --batch-row-height: 52px;
+  --batch-header-height: 56px;
+  max-height: calc(var(--batch-header-height) + 20 * var(--batch-row-height));
+  overflow-y: auto;
+
+  .mat-mdc-row {
+    height: var(--batch-row-height);
+  }
+}
+
 .batch-detail {
   margin-top: -8px;
 }
