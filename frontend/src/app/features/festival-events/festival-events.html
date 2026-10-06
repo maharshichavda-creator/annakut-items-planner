@@ -24,6 +24,10 @@
             <mat-label>Location</mat-label>
             <input matInput [(ngModel)]="form.location" name="location" />
           </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Annakut date</mat-label>
+            <input matInput type="date" [(ngModel)]="form.annakutDate" name="annakutDate" required />
+          </mat-form-field>
         </div>
         <div class="form-actions">
           <button mat-flat-button color="primary" (click)="save()">Save</button>
@@ -47,6 +51,11 @@
     <ng-container matColumnDef="location">
       <th mat-header-cell *matHeaderCellDef>Location</th>
       <td mat-cell *matCellDef="let e">{{ e.location }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="annakutDate">
+      <th mat-header-cell *matHeaderCellDef>Annakut date</th>
+      <td mat-cell *matCellDef="let e">{{ e.annakutDate ? (e.annakutDate | date: 'dd MMM yyyy') : '-' }}</td>
     </ng-container>
 
     <ng-container matColumnDef="active">

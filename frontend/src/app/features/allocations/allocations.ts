@@ -121,6 +121,18 @@ export class Allocations implements OnInit {
     return this.events().some((e) => e.id === selectedId && e.active);
   });
 
+  // Items can only be collected on the Annakut date configured for the selected year.
+  isAnnakutToday = computed(() => {
+    const selectedId = this.selectedEventId();
+    const event = this.events().find((e) => e.id === selectedId);
+    if (!event?.annakutDate) {
+      return false;
+    }
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    return event.annakutDate === today;
+  });
+
   // Summary widgets shown at the top of the page for the selected year.
   totalItemsCount = computed(() => this.activeItems().length);
 

@@ -53,6 +53,7 @@ export interface FestivalEvent {
   year: number;
   name: string;
   location: string | null;
+  annakutDate: string | null;
   active: boolean;
   createdAt: string;
 }
@@ -61,6 +62,7 @@ export interface FestivalEventRequest {
   year: number;
   name: string;
   location: string | null;
+  annakutDate: string;
   active?: boolean;
 }
 

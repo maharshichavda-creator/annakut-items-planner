@@ -41,6 +41,7 @@ public class FestivalEventService {
         event.setYear(request.year());
         event.setName(request.name().trim());
         event.setLocation(request.location());
+        event.setAnnakutDate(request.annakutDate());
         FestivalEvent saved = festivalEventRepository.save(event);
         if (Boolean.TRUE.equals(request.active())) {
             activate(saved.getId());

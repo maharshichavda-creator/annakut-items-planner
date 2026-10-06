@@ -2,6 +2,7 @@ package com.annakut.planner.domain;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
 
 /**
  * A single festival year (e.g. 2026, 2027). All allocations are scoped to an
@@ -23,6 +24,9 @@ public class FestivalEvent {
     private String name;
 
     private String location;
+
+    @Column(name = "annakut_date")
+    private LocalDate annakutDate;
 
     @Column(name = "is_active", nullable = false)
     private boolean active = false;
@@ -67,6 +71,14 @@ public class FestivalEvent {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public LocalDate getAnnakutDate() {
+        return annakutDate;
+    }
+
+    public void setAnnakutDate(LocalDate annakutDate) {
+        this.annakutDate = annakutDate;
     }
 
     public boolean isActive() {

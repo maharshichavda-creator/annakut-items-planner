@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -116,6 +117,14 @@ public class AllocationBatchService {
      */
     public AllocationBatchDto updateStatus(Long id, BatchStatusUpdateRequest request, String username) {
         AllocationBatch batch = findBatch(id);
+        if (request.status() == BatchStatus.COLLECTED) {
+            LocalDate annakutDate = batch.getEvent().getAnnakutDate();
+            if (annakutDate == null || !annakutDate.equals(LocalDate.now())) {
+                throw new ConflictException(annakutDate == null
+                        ? "Annakut date is not configured for festival year " + batch.getEvent().getYear()
+                        : "Items can be marked collected only on the Annakut date (" + annakutDate + ")");
+            }
+        }
         batch.setStatus(request.status());
         if (batch.getAllocatedDate() == null) {
             batch.setAllocatedDate(Instant.now());

@@ -30,7 +30,7 @@ import { FestivalEventService } from './festival-event.service';
   styleUrl: './festival-events.scss',
 })
 export class FestivalEvents implements OnInit {
-  displayedColumns = ['year', 'name', 'location', 'active', 'actions'];
+  displayedColumns = ['year', 'name', 'location', 'annakutDate', 'active', 'actions'];
   events = signal<FestivalEvent[]>([]);
   showForm = signal(false);
   form: FestivalEventRequest = this.emptyForm();
@@ -55,7 +55,7 @@ export class FestivalEvents implements OnInit {
   }
 
   save(): void {
-    if (!this.form.year || !this.form.name) {
+    if (!this.form.year || !this.form.name || !this.form.annakutDate) {
       return;
     }
     this.festivalEventService.create(this.form).subscribe({
@@ -93,6 +93,6 @@ export class FestivalEvents implements OnInit {
 
   private emptyForm(): FestivalEventRequest {
     const nextYear = new Date().getFullYear() + 1;
-    return { year: nextYear, name: 'અન્નકૂટ મહોત્સવ', location: 'BAPS Pune', active: false };
+    return { year: nextYear, name: 'અન્નકૂટ મહોત્સવ', location: 'BAPS Pune', annakutDate: '', active: false };
   }
 }
