@@ -75,6 +75,18 @@
     />
 
     <mat-form-field appearance="outline">
+      <mat-label>Filter by item</mat-label>
+      <input matInput placeholder="Search allocated item" [ngModel]="filterItemText()" (ngModelChange)="filterItemText.set($event)" />
+      @if (filterItemText()) {
+        <button matSuffix mat-icon-button type="button" aria-label="Clear item filter" (click)="filterItemText.set('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      } @else {
+        <mat-icon matSuffix>search</mat-icon>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label>Filter by status</mat-label>
       <mat-select [(ngModel)]="filterStatus">
         <mat-option [value]="null">All statuses</mat-option>

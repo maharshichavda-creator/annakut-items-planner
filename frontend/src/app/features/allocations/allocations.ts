@@ -64,6 +64,7 @@ export class Allocations implements OnInit {
   additionSelectedIds = signal<Set<number>>(new Set());
 
   filterHaribhaktId = signal<number | null>(null);
+  filterItemText = signal('');
   filterStatus = signal<BatchStatus | null>(null);
   expandedBatchId = signal<number | null>(null);
 
@@ -98,10 +99,14 @@ export class Allocations implements OnInit {
 
   visibleBatches = computed(() => {
     const haribhaktId = this.filterHaribhaktId();
+    const itemText = this.filterItemText().trim().toLowerCase();
     const status = this.filterStatus();
     let batches = this.batches();
     if (haribhaktId) {
       batches = batches.filter((b) => b.haribhaktId === haribhaktId);
+    }
+    if (itemText) {
+      batches = batches.filter((b) => b.items.some((i) => i.itemName.toLowerCase().includes(itemText)));
     }
     if (status) {
       batches = batches.filter((b) => b.status === status);
